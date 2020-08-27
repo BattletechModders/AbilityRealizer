@@ -196,6 +196,7 @@ namespace AbilityRealizer
         internal static void TryUpdateAbilities(Pilot pilot)
         {
 
+
             // skip pilots with specified pilot tags
             foreach (var tag in pilot.pilotDef.PilotTags)
             {
@@ -283,22 +284,19 @@ namespace AbilityRealizer
             }
 
             // find duplicates and remove them
-            var distinct = pilotDef.abilityDefNames.Distinct().ToList();
-            pilotDef.abilityDefNames.Clear();
-            pilotDef.abilityDefNames.AddRange(distinct);
             
-//            var duplicateAbilities = pilotDef.abilityDefNames.GroupBy(x => x).Where(x => x.Count() > 1).Select(x => x.Key);
-//            foreach (var abilityName in duplicateAbilities)
-//            {
-//                if (!Settings.IgnoreAbilities.Exists(x => abilityName.StartsWith(x)) &&
-//                    Settings.RemoveDuplicateAbilities)
-//                {
-//                    HBSLog.Log($"{pilotDef.Description.Id}: Removing duplicate '{abilityName}'s");
-//                    pilotDef.abilityDefNames.RemoveAll(x => x == abilityName);
-//                    pilotDef.abilityDefNames.Add(abilityName);
-//                    reloadAbilities = true;
-//                }
-//            }
+            var duplicateAbilities = pilotDef.abilityDefNames.GroupBy(x => x).Where(x => x.Count() > 1).Select(x => x.Key);
+            foreach (var abilityName in duplicateAbilities)
+            {
+                if (!Settings.IgnoreAbilities.Exists(x => abilityName.StartsWith(x)) &&
+                    Settings.RemoveDuplicateAbilities)
+                {
+                    HBSLog.Log($"{pilotDef.Description.Id}: Removing duplicate '{abilityName}'s");
+                    pilotDef.abilityDefNames.RemoveAll(x => x == abilityName);
+                    pilotDef.abilityDefNames.Add(abilityName);
+                    reloadAbilities = true;
+                }
+            }
 
             return reloadAbilities;
         }
