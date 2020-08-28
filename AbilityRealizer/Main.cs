@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using JetBrains.Annotations;
 
 // ReSharper disable InconsistentNaming
 
@@ -154,7 +155,7 @@ namespace AbilityRealizer
                         progressionAbilities.Add(abilityName);
                 }
             }
-
+            
             IsSetup = true;
         }
 
@@ -182,10 +183,10 @@ namespace AbilityRealizer
                 // pilotDef updated, dump it out to dir
                 pilotDefCopy.abilityDefNames.Sort();
 
-                var pilotDefJObject = new JObject {{"abilityDefNames", new JArray(pilotDefCopy.abilityDefNames)}};
+                var pilotDefJObject = new JObject { { "abilityDefNames", new JArray(pilotDefCopy.abilityDefNames) } };
                 using (var writer = File.CreateText(Path.Combine(directory, pilotID + ".json")))
                 {
-                    var jsonWriter = new JsonTextWriter(writer) {Formatting = Formatting.Indented};
+                    var jsonWriter = new JsonTextWriter(writer) { Formatting = Formatting.Indented };
                     pilotDefJObject.WriteTo(jsonWriter);
                     jsonWriter.Close();
                 }
@@ -194,15 +195,18 @@ namespace AbilityRealizer
 
         internal static void TryUpdateAbilities(Pilot pilot)
         {
+
+
             // skip pilots with specified pilot tags
             foreach (var tag in pilot.pilotDef.PilotTags)
             {
                 if (Settings.IgnorePilotsWithTags.Exists(x => tag.StartsWith(x)))
                     return;
             }
-
+            
             if (dataManager.PilotDefs.Exists(pilot.pilotDef.Description.Id)
                 && pilot.pilotDef == dataManager.PilotDefs.Get(pilot.pilotDef.Description.Id))
+                
             {
                 // the pilot is set to use the actual pilotdef object in datamanager!
                 // need to make sure that this pilot has it's own unique pilot def before we modify it
@@ -280,6 +284,7 @@ namespace AbilityRealizer
             }
 
             // find duplicates and remove them
+            
             var duplicateAbilities = pilotDef.abilityDefNames.GroupBy(x => x).Where(x => x.Count() > 1).Select(x => x.Key);
             foreach (var abilityName in duplicateAbilities)
             {
