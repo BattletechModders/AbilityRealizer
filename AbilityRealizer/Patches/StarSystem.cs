@@ -19,10 +19,11 @@ namespace AbilityRealizer.Patches
 			if (__instance.AvailablePilots.Any(x => x.Description.Id == def.Description.Id))
 
 			{
-				__instance.AvailablePilots.Remove(def);
-				if (__instance.PermanentRonin.Contains(def))
+				__instance.AvailablePilots.RemoveAll(x => x.Description.Id == def.Description.Id);
+	//			if (__instance.PermanentRonin.Contains(def))
+				if (__instance.PermanentRonin.Any(x => x.Description.Id == def.Description.Id))
 				{
-					__instance.PermanentRonin.Remove(def);
+					__instance.PermanentRonin.RemoveAll(x=>x.Description.Id == def.Description.Id);
 					__instance.Sim.UsedRoninIDs.Add(def.Description.Id);
 				}
 				def.SetDayOfHire(__instance.Sim.DaysPassed);
