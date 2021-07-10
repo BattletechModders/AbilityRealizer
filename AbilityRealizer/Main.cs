@@ -195,12 +195,7 @@ namespace AbilityRealizer
 
         internal static void TryUpdateAbilities(Pilot pilot)
         {
-            // skip pilots with specified pilot tags
-            foreach (var tag in pilot.pilotDef.PilotTags)
-            {
-                if (Settings.IgnorePilotsWithTags.Exists(x => tag.StartsWith(x)))
-                    return;
-            }
+
             
             if (dataManager.PilotDefs.Exists(pilot.pilotDef.Description.Id)
                 && pilot.pilotDef == dataManager.PilotDefs.Get(pilot.pilotDef.Description.Id))
@@ -214,7 +209,12 @@ namespace AbilityRealizer
             var pilotDef = pilot.pilotDef;
             var reloadAbilities = false;
 
-            
+            // skip pilots with specified pilot tags
+            foreach (var tag in pilot.pilotDef.PilotTags)
+            {
+                if (Settings.IgnorePilotsWithTags.Exists(x => tag.StartsWith(x)))
+                    return;
+            }
 
 
             reloadAbilities |= UpdateAbilitiesFromTree(pilotDef);
